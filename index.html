@@ -28,6 +28,10 @@
         text-align: center;
       }
 
+      #show{
+        text-transform:capitalize;
+      }
+
 
     </style>
     </head>
@@ -138,7 +142,7 @@ $(document).ready(function() {
     console.log(snap.name);
 
     // Change the HTML to reflect
-    $("#show").append(snap.name + "<br />");
+    $("#show").append("<span style='font-weight: bold; font-size: 20px;'> " + snap.name + "</span><br />");
     $("#show").append("<img src='" + snap.sprite + "' />" + "<br />");
     $("#show").append(snap.base_exp + "<br />" + snap.type + "<hr />");
 
