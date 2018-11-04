@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+    <head>
+      <title></title>
+        <!-- ======== -->
+
+          <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
+        <!-- ======== -->
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+        <!-- Bootstrap -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <!-- Bootstrap -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- <link rel="stylesheet" href="assets/css/style.css"> -->
+
+    <style>
+
+      html,body{
+        text-align: center;
+      }
+
+
+    </style>
+    </head>
+
+    <body>
+
+    <div id="show">
+
+    </div>
+
+<input  id="test"/>
+<button id="button">Add </button>
+
+
+<div id="show">
+
+</div>
+
+  <script>
+$(document).ready(function() {
+  // =============================================
+
+
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAMecc71liUT5w4Yz2L4sSzW6hS_hLZeTc",
+    authDomain: "pokemasters-2d080.firebaseapp.com",
+    databaseURL: "https://pokemasters-2d080.firebaseio.com",
+    projectId: "pokemasters-2d080",
+    storageBucket: "pokemasters-2d080.appspot.com",
+    messagingSenderId: "825509460353"
+  };
+  firebase.initializeApp(config);
+
+  var database = firebase.database();
+  // // =============================================
+  // //event.preventDefault();
+  // $.get('https://pokeapi.co/api/v2/pokemon/1/', function(data) {
+  //    console.log(data);
+  // });
+  var temp;
+  var pokemon = [];
+  var pokemonObjects = {};
+  var objectArray = [];
+  var results;
+  // function Pokemon(name,height){
+  //   this.pokeName = name;
+  //   this.pokeHeight = height;
+  // }
+  //
+  // $("#button").on("click", function(event) {
+  //     event.preventDefault();
+  //
+  //     // Grabbed values from text boxes
+  //
+  //
+  //     // Code for handling the push
+  //     database.ref().push({
+  //       name: name,
+  //       email: email,
+  //       age: age,
+  //       comment: comment,
+  //       dateAdded: firebase.database.ServerValue.TIMESTAMP
+  //     });
+  //
+  //   });
+
+
+  $("#button").on("click",function(event){  // keeping query on click so that we can get new pokemon results each time
+        event.preventDefault();
+
+          temp = $("#test").val().toLowerCase();
+
+          var queryURL = "https://pokeapi.co/api/v2/pokemon/" + temp + "/"; //
+            $.ajax({
+              url: queryURL,
+              method: "GET"
+            })
+              .then(function(response) {
+
+                results = response.sprites.front_default;
+                  console.log(response);
+                  console.log(response.name);
+                  console.log(response.base_experience);
+                  console.log(response.types[0].type.name);
+                  console.log(response.sprites.front_default);
+
+                  database.ref().push({
+                       name: response.name,
+                        base_exp: response.base_experience,
+                       height: response.height,
+                       type: response.types[0].type.name,
+                       sprite: response.sprites.front_default,
+                       dateAdded: firebase.database.ServerValue.TIMESTAMP
+                     });
+
+                 //charizard
+
+              });
+
+
+              //database.ref().push({
+             //       name: name,
+             //       email: email,
+             //       age: age,
+             //       comment: comment,
+             //       dateAdded: firebase.database.ServerValue.TIMESTAMP
+             //     });
+          //    $("#show").append(pokeData.name);
+          //  console.log(pokeData);
+            //for(var i = 0; i < pokeData.length;i++){
+
+
+  });
+  // console.log(pokeData);
+
+  database.ref().on("child_added", function(snapshot) { // shows latest child added in the console
+    // storing the snapshot.val() in a variable for convenience
+    var snap = snapshot.val();
+
+    console.log(snap.sprite);
+
+    // Change the HTML to reflect
+    $("#show").append("<img src='" + snap.sprite + "' />" );
+
+  }, function(errorObject) {
+    console.log("Errors handled: " + errorObject.code);
+  });
+
+        console.log(results);
+
+
+});
+  </script>
+
+
+
+    </body>
+
+</html>
